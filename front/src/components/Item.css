@@ -1,0 +1,59 @@
+.item {
+  margin-bottom: 0.3rem;
+  padding: 0.5rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  border-radius: 0.7rem;
+  transition: 0.4s;
+}
+
+.item:hover {
+  background: black;
+}
+
+.status {
+  margin-right: 0.5rem;
+  padding: 0.2rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 0.1rem solid white;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.item[data-completed='true'] .status {
+  background-color: darkgrey;
+}
+
+.text {
+  height: 0.8rem;
+  margin: 0;
+  padding: 0.2rem;
+  font-size: 1rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 0.1rem solid transparent;
+  border-radius: 0;
+  outline: none;
+  transition: 0.4s;
+}
+
+.text:focus {
+  border-bottom: 0.1rem solid white;
+}
+
+.item[data-completed='true'] .text {
+  text-decoration: line-through;
+}
+
+.action {
+  display: flex;
+}
+
+.close {
+  display: flex;
+  place-items: center;
+  cursor: pointer;
+}

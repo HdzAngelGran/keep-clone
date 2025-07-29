@@ -1,5 +1,12 @@
+import List from './components/List'
+import { TodoProvider } from './context/todo'
+
 function App() {
-  return <></>
+  return (
+    <TodoProvider>
+      <List />
+    </TodoProvider>
+  )
 }
 
 export default App
