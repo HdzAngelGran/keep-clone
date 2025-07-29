@@ -1,5 +1,6 @@
 import { useTodo } from '../hooks/useTodo'
 import { useFilter } from '../hooks/useFilter'
+import Comments from './Comments'
 import Item from './Item'
 import './List.css'
 
@@ -11,6 +12,7 @@ function List() {
 
   return (
     <>
+      <Comments />
       <main className="list">
         {filteredList.map((item) => (
           <Item key={item.id} item={item} />

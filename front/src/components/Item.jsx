@@ -1,11 +1,14 @@
 import { useTodo } from '../hooks/useTodo'
 import Close from '../assets/Close'
 import Arrow from '../assets/Arrow'
+import Ellipsis from '../assets/Ellipsis'
 import './Item.css'
+import { useComments } from '../hooks/useComments'
 
 function Item({ item, fatherId = '' }) {
   const { editItem, deleteItem, addSubItem, editSubItem, deleteSubItem } =
     useTodo()
+  const { setOpen, setItemId, setFatherId } = useComments()
 
   const isSub = fatherId !== ''
   const allSubItemsCompleted = item.subItems?.every(
@@ -44,6 +47,12 @@ function Item({ item, fatherId = '' }) {
     deleteItem(item.id)
   }
 
+  const openComments = () => {
+    setOpen(true)
+    setItemId(item.id)
+    if (isSub) setFatherId(fatherId)
+  }
+
   return (
     <>
       <div className="item" data-completed={item.completed}>
@@ -66,6 +75,9 @@ function Item({ item, fatherId = '' }) {
           )}
           <div title="Eliminar" className="close" onClick={deleteFromList}>
             <Close width={'1.3rem'} height={'1.3rem'} />
+          </div>
+          <div title="Comentarios" className="comments" onClick={openComments}>
+            <Ellipsis width={'1.3rem'} height={'1.3rem'} />
           </div>
         </div>
       </div>

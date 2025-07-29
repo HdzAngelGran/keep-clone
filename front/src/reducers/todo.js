@@ -13,6 +13,12 @@ export const ACTION = {
   ADD_SUB_ITEM: 'ADD_SUB_ITEM',
   EDIT_SUB_ITEM: 'EDIT_SUB_ITEM',
   DELETE_SUB_ITEM: 'DELETE_SUB_ITEM',
+  ADD_COMMENT: 'ADD_COMMENT',
+  EDIT_COMMENT: 'EDIT_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+  ADD_SUB_COMMENT: 'ADD_SUB_COMMENT',
+  EDIT_SUB_COMMENT: 'EDIT_SUB_COMMENT',
+  DELETE_SUB_COMMENT: 'DELETE_SUB_COMMENT',
 }
 
 export const updateLocalStorage = (state) => {
@@ -93,6 +99,129 @@ const UPDATE_STATE_BY_ACTION = {
           (subItem) => subItem.id !== subItemId,
         )
         return { ...item, subItems: updatedSubItems }
+      }
+      return item
+    })
+    updateLocalStorage(newState)
+    return newState
+  },
+  [ACTION.ADD_COMMENT]: (state, action) => {
+    const { itemId } = action.payload
+    const newComment = {
+      id: crypto.randomUUID(),
+      text: '',
+    }
+    const newState = state.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            comments: [...(item.comments || []), newComment],
+          }
+        : item,
+    )
+    updateLocalStorage(newState)
+    return newState
+  },
+  [ACTION.EDIT_COMMENT]: (state, action) => {
+    const { itemId, commentId, value } = action.payload
+    const newState = state.map((item) => {
+      if (item.id === itemId) {
+        const updatedComments = item.comments.map((comment) =>
+          comment.id === commentId ? { ...comment, text: value } : comment,
+        )
+        return {
+          ...item,
+          comments: updatedComments,
+        }
+      }
+      return item
+    })
+    updateLocalStorage(newState)
+    return newState
+  },
+  [ACTION.DELETE_COMMENT]: (state, action) => {
+    const { itemId, commentId } = action.payload
+    const newState = state.map((item) => {
+      if (item.id === itemId) {
+        const updatedComments = item.comments.filter(
+          (comment) => comment.id !== commentId,
+        )
+        return { ...item, comments: updatedComments }
+      }
+      return item
+    })
+    updateLocalStorage(newState)
+    return newState
+  },
+  [ACTION.ADD_SUB_COMMENT]: (state, action) => {
+    const { itemId, subItemId } = action.payload
+    const newComment = {
+      id: crypto.randomUUID(),
+      text: '',
+    }
+    const newState = state.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          subItems: item.subItems.map((subItem) => {
+            if (subItem.id === subItemId) {
+              return {
+                ...subItem,
+                comments: [...(subItem.comments || []), newComment],
+              }
+            }
+            return subItem
+          }),
+        }
+      }
+      return item
+    })
+    updateLocalStorage(newState)
+    return newState
+  },
+  [ACTION.EDIT_SUB_COMMENT]: (state, action) => {
+    const { itemId, subItemId, commentId, value } = action.payload
+    const newState = state.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          subItems: item.subItems.map((subItem) => {
+            if (subItem.id === subItemId) {
+              const updatedComments = subItem.comments.map((comment) =>
+                comment.id === commentId
+                  ? {
+                      ...comment,
+                      text: value,
+                    }
+                  : comment,
+              )
+              return { ...subItem, comments: updatedComments }
+            }
+            return subItem
+          }),
+        }
+      }
+      return item
+    })
+    updateLocalStorage(newState)
+    return newState
+  },
+  [ACTION.DELETE_SUB_COMMENT]: (state, action) => {
+    const { itemId, subItemId, commentId } = action.payload
+    const newState = state.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          subItems: item.subItems.map((subItem) => {
+            if (subItem.id === subItemId) {
+              const updatedComments = subItem.comments.filter(
+                (comment) => comment.id !== commentId,
+              )
+              return { ...subItem, comments: updatedComments }
+            }
+            return subItem
+          }),
+        }
       }
       return item
     })
