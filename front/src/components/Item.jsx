@@ -76,9 +76,15 @@ function Item({ item, fatherId = '' }) {
           <div title="Eliminar" className="close" onClick={deleteFromList}>
             <Close width={'1.3rem'} height={'1.3rem'} />
           </div>
-          <div title="Comentarios" className="comments" onClick={openComments}>
-            <Ellipsis width={'1.3rem'} height={'1.3rem'} />
-          </div>
+          {!isSub && (
+            <div
+              title="Comentarios"
+              className="comments"
+              onClick={openComments}
+            >
+              <Ellipsis width={'1.3rem'} height={'1.3rem'} />
+            </div>
+          )}
         </div>
       </div>
       {!isSub &&
