@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const List = require("../../model/list.model");
+const { mapListDto } = require("../../util/dtoMap");
+const user = 1;
 
-router.get("/:user", async (req, res) => {
-  const user = req.params.user;
+router.get("/", async (req, res) => {
   try {
     const list = await List.findOne({ user });
-    res.status(200).json(list);
+    res.status(200).json(mapListDto(list));
   } catch (error) {
     console.error("Error finding list:", error);
     res.status(500).send("Internal Server Error");

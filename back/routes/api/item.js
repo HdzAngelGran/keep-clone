@@ -10,8 +10,8 @@ router.post("/", async (req, res) => {
       { $push: { items: {} } },
       { new: true, upsert: true }
     );
-    console.log("List updated:", list);
-    res.status(200).json("Item created successfully");
+    const newItem = list.items[list.items.length - 1];
+    res.status(200).json({ newItemId: newItem._id });
   } catch (error) {
     console.error("Error finding list:", error);
     res.status(500).send("Internal Server Error");
@@ -31,7 +31,6 @@ router.put("/:itemId/status", async (req, res) => {
       },
       { upsert: true }
     );
-    console.log("List updated:", list);
     res.status(200).json("Item updated successfully");
   } catch (error) {
     console.error("Error finding list:", error);
@@ -52,7 +51,6 @@ router.put("/:itemId/text", async (req, res) => {
       },
       { upsert: true }
     );
-    console.log("List updated:", item);
     res.status(200).json("Item updated successfully");
   } catch (error) {
     console.error("Error finding list:", error);
@@ -75,7 +73,6 @@ router.delete("/:itemId", async (req, res) => {
 
     if (!item) return res.status(404).json("Item not found");
 
-    console.log("List updated:", item);
     res.status(200).json("item deleted successfully");
   } catch (error) {
     console.error("Error finding list:", error);
@@ -91,8 +88,9 @@ router.post("/:itemId/comment", async (req, res) => {
       { $push: { "items.$.comments": {} } },
       { new: true, upsert: true }
     );
-    console.log("List updated:", list);
-    res.status(200).json("Comment created successfully");
+    const item = list.items.find((i) => i._id.toString() === itemId);
+    const newComment = item.comments[item.comments.length - 1];
+    res.status(200).json({ newCommentId: newComment._id });
   } catch (error) {
     console.error("Error finding list:", error);
     res.status(500).send("Internal Server Error");
@@ -123,7 +121,6 @@ router.put("/:itemId/comment/:commentId", async (req, res) => {
         list.save();
       }
     );
-    console.log("List updated:", list);
     res.status(200).json("Comment updated successfully");
   } catch (error) {
     console.error("Error finding list:", error);
