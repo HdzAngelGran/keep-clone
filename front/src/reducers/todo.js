@@ -1,12 +1,20 @@
-export const todoInitialState = JSON.parse(localStorage.getItem('list')) || [
-  {
-    id: crypto.randomUUID(),
-    completed: false,
-    text: '',
-  },
-]
+import {
+  updateItemStatus,
+  updateItemText,
+  deleteItem,
+  updateComment,
+  deleteComment,
+} from '../service/item'
+import {
+  deleteSubItem,
+  updateSubItemStatus,
+  updateSubItemText,
+} from '../service/subitem'
+
+export const todoInitialState = JSON.parse(localStorage.getItem('list')) || []
 
 export const ACTION = {
+  INIT_LIST: 'INIT_LIST',
   ADD_ITEM: 'ADD_ITEM',
   EDIT_ITEM: 'EDIT_ITEM',
   DELETE_ITEM: 'DELETE_ITEM',
@@ -26,12 +34,19 @@ export const updateLocalStorage = (state) => {
 }
 
 const UPDATE_STATE_BY_ACTION = {
-  [ACTION.ADD_ITEM]: (state) => {
+  [ACTION.INIT_LIST]: async (state, action) => {
+    const { list } = action.payload
+    updateLocalStorage(list)
+    return list
+  },
+  [ACTION.ADD_ITEM]: (state, action) => {
+    let newItemId = action.payload
     const newItem = {
-      id: crypto.randomUUID(),
+      id: newItemId,
       completed: false,
       text: '',
       subItems: [],
+      comments: [],
     }
     const newState = [...state, newItem]
     updateLocalStorage(newState)
@@ -39,6 +54,11 @@ const UPDATE_STATE_BY_ACTION = {
   },
   [ACTION.EDIT_ITEM]: (state, action) => {
     const { itemId, attribute, value } = action.payload
+    if (attribute === 'completed') {
+      updateItemStatus(itemId, value)
+    } else if (attribute === 'text') {
+      updateItemText(itemId, value)
+    }
     const newState = state.map((item) =>
       item.id === itemId ? { ...item, [attribute]: value } : item,
     )
@@ -46,17 +66,19 @@ const UPDATE_STATE_BY_ACTION = {
     return newState
   },
   [ACTION.DELETE_ITEM]: (state, action) => {
+    deleteItem(action.payload)
     const newState = state.filter((item) => item.id !== action.payload)
     updateLocalStorage(newState)
     return newState
   },
   [ACTION.ADD_SUB_ITEM]: (state, action) => {
-    const { itemId } = action.payload
-
+    const { itemId, newSubItemId } = action.payload
+    updateItemStatus(itemId, false)
     const newSubItem = {
-      id: crypto.randomUUID(),
+      id: newSubItemId,
       completed: false,
       text: '',
+      comments: [],
     }
     const newState = state.map((item) =>
       item.id === itemId
@@ -72,7 +94,16 @@ const UPDATE_STATE_BY_ACTION = {
   },
   [ACTION.EDIT_SUB_ITEM]: (state, action) => {
     const { itemId, subItemId, attribute, value } = action.payload
+    if (attribute === 'completed') {
+      updateSubItemStatus(itemId, subItemId, value)
+    } else if (attribute === 'text') {
+      updateSubItemText(itemId, subItemId, value)
+    }
     const isStatusPending = attribute === 'completed' && value == false
+
+    if (isStatusPending) {
+      updateItemStatus(itemId, false)
+    }
     const newState = state.map((item) => {
       if (item.id === itemId) {
         const updatedSubItems = item.subItems.map((subItem) =>
@@ -93,6 +124,7 @@ const UPDATE_STATE_BY_ACTION = {
   },
   [ACTION.DELETE_SUB_ITEM]: (state, action) => {
     const { itemId, subItemId } = action.payload
+    deleteSubItem(itemId, subItemId)
     const newState = state.map((item) => {
       if (item.id === itemId) {
         const updatedSubItems = item.subItems.filter(
@@ -106,9 +138,9 @@ const UPDATE_STATE_BY_ACTION = {
     return newState
   },
   [ACTION.ADD_COMMENT]: (state, action) => {
-    const { itemId } = action.payload
+    const { itemId, newCommentId } = action.payload
     const newComment = {
-      id: crypto.randomUUID(),
+      id: newCommentId,
       text: '',
     }
     const newState = state.map((item) =>
@@ -124,6 +156,7 @@ const UPDATE_STATE_BY_ACTION = {
   },
   [ACTION.EDIT_COMMENT]: (state, action) => {
     const { itemId, commentId, value } = action.payload
+    updateComment(itemId, commentId, value)
     const newState = state.map((item) => {
       if (item.id === itemId) {
         const updatedComments = item.comments.map((comment) =>
@@ -141,6 +174,7 @@ const UPDATE_STATE_BY_ACTION = {
   },
   [ACTION.DELETE_COMMENT]: (state, action) => {
     const { itemId, commentId } = action.payload
+    deleteComment(itemId, commentId)
     const newState = state.map((item) => {
       if (item.id === itemId) {
         const updatedComments = item.comments.filter(
