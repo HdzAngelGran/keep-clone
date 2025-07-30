@@ -5,6 +5,8 @@ const app = express();
 const PORT = 8080;
 app.use(express.json());
 
+app.use(require("./routes"));
+
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
