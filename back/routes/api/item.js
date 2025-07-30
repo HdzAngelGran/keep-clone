@@ -148,7 +148,111 @@ router.delete("/:itemId/comment/:commentId", async (req, res) => {
         list.save();
       }
     );
-    console.log("List updated:", list);
+    res.status(200).json("Comment updated successfully");
+  } catch (error) {
+    console.error("Error finding list:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.post("/:itemId/sub-item", async (req, res) => {
+  const itemId = req.params.itemId;
+  try {
+    const list = await List.findOneAndUpdate(
+      { user, "items._id": itemId },
+      { $push: { "items.$.subItems": {} } },
+      { new: true, upsert: true }
+    );
+    const item = list.items.find((i) => i._id.toString() === itemId);
+    const newSubItem = item.subItems[item.subItems.length - 1];
+    res.status(200).json({ newSubItemId: newSubItem._id });
+  } catch (error) {
+    console.error("Error finding list:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.put("/:itemId/subItem/:subItemId/text", async (req, res) => {
+  const { itemId, subItemId } = req.params;
+  const text = req.body.text;
+  try {
+    const list = await List.findOne({ user, "items._id": itemId }).then(
+      (list) => {
+        if (!list) {
+          return res.status(404).json("Item not found");
+        }
+
+        list.items = list.items.map((item) => {
+          if (item._id.toString() === itemId) {
+            item.subItems = item.subItems.map((subItem) => {
+              if (subItem._id.toString() === subItemId) {
+                subItem.text = text;
+              }
+              return subItem;
+            });
+          }
+          return item;
+        });
+        list.save();
+      }
+    );
+    res.status(200).json("Comment updated successfully");
+  } catch (error) {
+    console.error("Error finding list:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.put("/:itemId/subItem/:subItemId/status", async (req, res) => {
+  const { itemId, subItemId } = req.params;
+  const status = req.body.status;
+  try {
+    const list = await List.findOne({ user, "items._id": itemId }).then(
+      (list) => {
+        if (!list) {
+          return res.status(404).json("Item not found");
+        }
+
+        list.items = list.items.map((item) => {
+          if (item._id.toString() === itemId) {
+            item.subItems = item.subItems.map((subItem) => {
+              if (subItem._id.toString() === subItemId) {
+                subItem.completed = status;
+              }
+              return subItem;
+            });
+          }
+          return item;
+        });
+        list.save();
+      }
+    );
+    res.status(200).json("Comment updated successfully");
+  } catch (error) {
+    console.error("Error finding list:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.delete("/:itemId/subItem/:subItemId", async (req, res) => {
+  const { itemId, subItemId } = req.params;
+  try {
+    const list = await List.findOne({ user, "items._id": itemId }).then(
+      (list) => {
+        if (!list) {
+          return res.status(404).json("Item not found");
+        }
+        list.items = list.items.map((item) => {
+          if (item._id.toString() === itemId) {
+            item.subItems = item.subItems.filter(
+              (subItem) => subItem._id.toString() !== subItemId
+            );
+          }
+          return item;
+        });
+        list.save();
+      }
+    );
     res.status(200).json("Comment updated successfully");
   } catch (error) {
     console.error("Error finding list:", error);
