@@ -4,7 +4,7 @@ function mapListDto(list) {
   }
   return {
     id: list._id,
-    items: list.items?.map((item) => mapItemDto(item)) || [],
+    list: list.items?.map((item) => mapItemDto(item)) || [],
   };
 }
 
@@ -12,8 +12,9 @@ function mapItemDto(item) {
   return {
     id: item._id,
     text: item.text,
+    completed: item.completed,
     subItems: item.subItems?.map((subItem) => mapSubItemDto(subItem)) || [],
-    comments: item.comments || [],
+    comments: item.comments?.map((comment) => mapCommentDto(comment)) || [],
   };
 }
 
@@ -21,7 +22,15 @@ function mapSubItemDto(subItem) {
   return {
     id: subItem._id,
     text: subItem.text,
-    comments: subItem.comments || [],
+    completed: subItem.completed,
+    comments: subItem.comments?.map((comment) => mapCommentDto(comment)) || [],
+  };
+}
+
+function mapCommentDto(comment) {
+  return {
+    id: comment._id,
+    text: comment.text,
   };
 }
 
