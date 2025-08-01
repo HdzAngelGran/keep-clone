@@ -1,14 +1,23 @@
 import axios from 'axios'
-import { BASE_API_URL } from './index'
-const PATH = '/item'
-
-const SERVICE_URL = BASE_API_URL + PATH
+import { ITEM_PATH } from './index'
 
 const pendingRequests = new Map()
 
+export async function addItem(): Promise<string | void> {
+  return await axios
+    .post(ITEM_PATH)
+    .then((res) => {
+      const data = res.data as { newItemId: string }
+      return data.newItemId
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+}
+
 export async function updateItemStatus(itemId: string, status: boolean) {
   const request = await axios
-    .put(`${SERVICE_URL}/${itemId}/status`, { status })
+    .put(`${ITEM_PATH}/${itemId}/status`, { status })
     .catch((error) => {
       console.error(error)
     })
@@ -17,7 +26,7 @@ export async function updateItemStatus(itemId: string, status: boolean) {
 
 export async function updateItemText(itemId: string, text: string) {
   const request = await axios
-    .put(`${SERVICE_URL}/${itemId}/text`, { text })
+    .put(`${ITEM_PATH}/${itemId}/text`, { text })
     .catch((error) => {
       console.error(error)
     })
@@ -25,11 +34,11 @@ export async function updateItemText(itemId: string, text: string) {
 }
 
 export async function deleteItem(itemId: string) {
-  const requestKey = `${SERVICE_URL}/${itemId}`
+  const requestKey = `${ITEM_PATH}/${itemId}`
   if (pendingRequests.has(requestKey)) return
 
   const request = axios
-    .delete(`${SERVICE_URL}/${itemId}`)
+    .delete(`${ITEM_PATH}/${itemId}`)
     .then((res) => {
       pendingRequests.delete(requestKey)
     })
@@ -40,9 +49,25 @@ export async function deleteItem(itemId: string) {
   pendingRequests.set(requestKey, request)
 }
 
-export async function updateComment(itemId: string, commentId: string, text: string) {
+export async function addComment(itemId: string): Promise<string | void> {
+  return await axios
+    .post(`${ITEM_PATH}/${itemId}/comment`)
+    .then((res) => {
+      const data = res.data as { newCommentId: string }
+      return data.newCommentId
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+}
+
+export async function updateComment(
+  itemId: string,
+  commentId: string,
+  text: string,
+) {
   const request = await axios
-    .put(`${SERVICE_URL}/${itemId}/comment/${commentId}`, { text })
+    .put(`${ITEM_PATH}/${itemId}/comment/${commentId}`, { text })
     .catch((error) => {
       console.error(error)
     })
@@ -50,11 +75,11 @@ export async function updateComment(itemId: string, commentId: string, text: str
 }
 
 export async function deleteComment(itemId: string, commentId: string) {
-  const requestKey = `${SERVICE_URL}/${itemId}/comment/${commentId}`
+  const requestKey = `${ITEM_PATH}/${itemId}/comment/${commentId}`
   if (pendingRequests.has(requestKey)) return
 
   const request = axios
-    .delete(`${SERVICE_URL}/${itemId}/comment/${commentId}`)
+    .delete(`${ITEM_PATH}/${itemId}/comment/${commentId}`)
     .then((res) => {
       pendingRequests.delete(requestKey)
     })
