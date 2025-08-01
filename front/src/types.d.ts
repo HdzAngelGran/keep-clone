@@ -1,4 +1,4 @@
-import { TODO_FILTER } from "./const"
+import { TODO_FILTER } from './const'
 
 export interface Item {
   id: string
@@ -27,7 +27,7 @@ export interface CommentsContextType {
   setFatherId: React.Dispatch<React.SetStateAction<string>>
 }
 
-export type FilterValue = typeof TODO_FILTER[keyof typeof TODO_FILTER]
+export type FilterValue = (typeof TODO_FILTER)[keyof typeof TODO_FILTER]
 
 export interface FilterContextType {
   filter: string
@@ -35,35 +35,32 @@ export interface FilterContextType {
 }
 
 export interface TodoContextType {
-  list: Item[],
-  addItem: () => void,
-  editItem: (
-    itemId: string,
-    attribute: string,
-    value: string | boolean,
-  ) => void,
-  deleteItem: (itemId: string) => void,
-  addSubItem: (itemId: string) => void,
+  list: Item[]
+  initList: (list: Item[]) => void
+  addItem: () => void
+  editItem: (itemId: string, attribute: string, value: string | boolean) => void
+  deleteItem: (itemId: string) => void
+  addSubItem: (itemId: string) => void
   editSubItem: (
     itemId: string,
     subItemId: string,
     attribute: string,
     value: string | boolean,
-  ) => void,
-  deleteSubItem: (itemId: string, subItemId: string) => void,
-  addComment: (itemId: string) => void,
-  editComment: (itemId: string, commentId: string, value: string) => void,
-  deleteComment: (itemId: string, commentId: string) => void,
-  addSubComment: (itemId: string, subItemId: string) => void,
+  ) => void
+  deleteSubItem: (itemId: string, subItemId: string) => void
+  addComment: (itemId: string) => void
+  editComment: (itemId: string, commentId: string, value: string) => void
+  deleteComment: (itemId: string, commentId: string) => void
+  addSubComment: (itemId: string, subItemId: string) => void
   editSubComment: (
     itemId: string,
     subItemId: string,
     commentId: string,
     value: string,
-  ) => void,
+  ) => void
   deleteSubComment: (
     itemId: string,
     subItemId: string,
     commentId: string,
-  ) => void,
+  ) => void
 }
