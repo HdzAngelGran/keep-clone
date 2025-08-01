@@ -1,4 +1,4 @@
-import {Item} from '../types'
+import { Item } from '../types'
 
 import {
   updateItemStatus,
@@ -13,7 +13,9 @@ import {
   updateSubItemText,
 } from '../service/subitem'
 
-export const todoInitialState: Item[] = JSON.parse(localStorage.getItem('list') || "[]")
+export const todoInitialState: Item[] = JSON.parse(
+  localStorage.getItem('list') || '[]',
+)
 
 export const ACTION = {
   INIT_LIST: 'INIT_LIST',
@@ -36,7 +38,7 @@ export const updateLocalStorage = (state: Item[]) => {
 }
 
 const UPDATE_STATE_BY_ACTION = {
-  [ACTION.INIT_LIST]: async (state: Item[], action: any) => {
+  [ACTION.INIT_LIST]: (state: Item[], action: any) => {
     const { list } = action.payload
     updateLocalStorage(list)
     return list
@@ -266,7 +268,7 @@ const UPDATE_STATE_BY_ACTION = {
   },
 }
 
-export const todoReducer = (state, action: any) => {
+export const todoReducer = (state: Item[], action: any) => {
   const updateState = UPDATE_STATE_BY_ACTION[action.type]
   return updateState ? updateState(state, action) : state
 }
