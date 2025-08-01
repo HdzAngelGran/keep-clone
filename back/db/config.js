@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 
-const user = "user-t1";
-const pw = "VT3r3u.tgHZmp7-";
-const cluster = "test-cluster.vkny5aj.mongodb.net";
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
 
-const uri = `mongodb+srv://${user}:${pw}@${cluster}/?retryWrites=true&w=majority&appName=todo-t1`;
+const uri = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
 
 mongoose.connect(uri);
 
