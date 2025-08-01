@@ -2,7 +2,7 @@ import { createContext, ReactElement, useReducer } from 'react'
 import { todoReducer, todoInitialState } from '../reducers/todo'
 
 import axios from 'axios'
-import { TodoContextType } from '../types'
+import { Item, TodoContextType } from '../types'
 
 const SERVICE_URL = 'http://localhost:8080/api/v1/item'
 
@@ -10,6 +10,7 @@ const pendingRequests = new Map()
 
 export const TodoContext = createContext<TodoContextType>({
   list: todoInitialState,
+  initList: () => {},
   addItem: () => {},
   editItem: (
     _itemId: string,
@@ -44,6 +45,10 @@ export const TodoContext = createContext<TodoContextType>({
 
 function useTodoReducer() {
   const [state, dispatch] = useReducer(todoReducer, todoInitialState)
+
+  const initList = (list: Item[]) => {
+    dispatch({ type: 'INIT_LIST', payload: { list } })
+  }
 
   const addItem = () => {
     const requestKey = `${SERVICE_URL}`
@@ -170,6 +175,7 @@ function useTodoReducer() {
 
   return {
     state,
+    initList,
     addItem,
     editItem,
     deleteItem,
@@ -188,6 +194,7 @@ function useTodoReducer() {
 export function TodoProvider({ children }: any): ReactElement {
   const {
     state,
+    initList,
     addItem,
     editItem,
     deleteItem,
@@ -206,6 +213,7 @@ export function TodoProvider({ children }: any): ReactElement {
     <TodoContext.Provider
       value={{
         list: state,
+        initList,
         addItem,
         editItem,
         deleteItem,
