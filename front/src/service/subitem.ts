@@ -7,7 +7,7 @@ const SERVICE_URL = BASE_API_URL + PATH
 
 const pendingRequests = new Map()
 
-export async function updateSubItemStatus(itemId, subItemId, status) {
+export async function updateSubItemStatus(itemId: string, subItemId: string, status: boolean) {
   const request = await axios
     .put(`${SERVICE_URL}/${itemId}${SUB_PATH}/${subItemId}/status`, { status })
     .catch((error) => {
@@ -16,7 +16,7 @@ export async function updateSubItemStatus(itemId, subItemId, status) {
   return request
 }
 
-export async function updateSubItemText(itemId, subItemId, text) {
+export async function updateSubItemText(itemId: string, subItemId: string, text: string) {
   const request = await axios
     .put(`${SERVICE_URL}/${itemId}${SUB_PATH}/${subItemId}/text`, { text })
     .catch((error) => {
@@ -25,16 +25,17 @@ export async function updateSubItemText(itemId, subItemId, text) {
   return request
 }
 
-export async function deleteSubItem(itemId, subItemId) {
+export async function deleteSubItem(itemId: string, subItemId: string) {
   const requestKey = `${SERVICE_URL}/${itemId}${SUB_PATH}/${subItemId}`
   if (pendingRequests.has(requestKey)) return
 
   const request = axios
     .delete(`${SERVICE_URL}/${itemId}${SUB_PATH}/${subItemId}`)
+    .then(() => {
+      pendingRequests.delete(requestKey)
+    })
     .catch((error) => {
       console.error(error)
-    })
-    .finally(() => {
       pendingRequests.delete(requestKey)
     })
   pendingRequests.set(requestKey, request)

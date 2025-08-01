@@ -1,4 +1,6 @@
-function Ellipsis({ width, height }) {
+import { IconProps } from '../types'
+
+function Arrow({ width, height }: IconProps) {
   return (
     <svg
       width={width}
@@ -13,10 +15,10 @@ function Ellipsis({ width, height }) {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+        d="m16.49 12 3.75 3.75m0 0-3.75 3.75m3.75-3.75H3.74V4.499"
       />
     </svg>
   )
 }
 
-export default Ellipsis
+export default Arrow

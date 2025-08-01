@@ -1,3 +1,5 @@
+import {Item} from '../types'
+
 import {
   updateItemStatus,
   updateItemText,
@@ -11,7 +13,7 @@ import {
   updateSubItemText,
 } from '../service/subitem'
 
-export const todoInitialState = JSON.parse(localStorage.getItem('list')) || []
+export const todoInitialState: Item[] = JSON.parse(localStorage.getItem('list') || "[]")
 
 export const ACTION = {
   INIT_LIST: 'INIT_LIST',
@@ -29,17 +31,17 @@ export const ACTION = {
   DELETE_SUB_COMMENT: 'DELETE_SUB_COMMENT',
 }
 
-export const updateLocalStorage = (state) => {
+export const updateLocalStorage = (state: Item[]) => {
   localStorage.setItem('list', JSON.stringify(state))
 }
 
 const UPDATE_STATE_BY_ACTION = {
-  [ACTION.INIT_LIST]: async (state, action) => {
+  [ACTION.INIT_LIST]: async (state: Item[], action: any) => {
     const { list } = action.payload
     updateLocalStorage(list)
     return list
   },
-  [ACTION.ADD_ITEM]: (state, action) => {
+  [ACTION.ADD_ITEM]: (state: Item[], action: any) => {
     let newItemId = action.payload
     const newItem = {
       id: newItemId,
@@ -52,7 +54,7 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.EDIT_ITEM]: (state, action) => {
+  [ACTION.EDIT_ITEM]: (state: Item[], action: any) => {
     const { itemId, attribute, value } = action.payload
     if (attribute === 'completed') {
       updateItemStatus(itemId, value)
@@ -65,13 +67,13 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.DELETE_ITEM]: (state, action) => {
+  [ACTION.DELETE_ITEM]: (state: Item[], action: any) => {
     deleteItem(action.payload)
     const newState = state.filter((item) => item.id !== action.payload)
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.ADD_SUB_ITEM]: (state, action) => {
+  [ACTION.ADD_SUB_ITEM]: (state: Item[], action: any) => {
     const { itemId, newSubItemId } = action.payload
     updateItemStatus(itemId, false)
     const newSubItem = {
@@ -85,14 +87,14 @@ const UPDATE_STATE_BY_ACTION = {
         ? {
             ...item,
             completed: false,
-            subItems: [...item.subItems, newSubItem],
+            subItems: [...(item.subItems || []), newSubItem],
           }
         : item,
     )
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.EDIT_SUB_ITEM]: (state, action) => {
+  [ACTION.EDIT_SUB_ITEM]: (state: Item[], action: any) => {
     const { itemId, subItemId, attribute, value } = action.payload
     if (attribute === 'completed') {
       updateSubItemStatus(itemId, subItemId, value)
@@ -106,7 +108,7 @@ const UPDATE_STATE_BY_ACTION = {
     }
     const newState = state.map((item) => {
       if (item.id === itemId) {
-        const updatedSubItems = item.subItems.map((subItem) =>
+        const updatedSubItems = item.subItems?.map((subItem) =>
           subItem.id === subItemId
             ? { ...subItem, [attribute]: value }
             : subItem,
@@ -122,12 +124,12 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.DELETE_SUB_ITEM]: (state, action) => {
+  [ACTION.DELETE_SUB_ITEM]: (state: Item[], action: any) => {
     const { itemId, subItemId } = action.payload
     deleteSubItem(itemId, subItemId)
     const newState = state.map((item) => {
       if (item.id === itemId) {
-        const updatedSubItems = item.subItems.filter(
+        const updatedSubItems = item.subItems?.filter(
           (subItem) => subItem.id !== subItemId,
         )
         return { ...item, subItems: updatedSubItems }
@@ -137,7 +139,7 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.ADD_COMMENT]: (state, action) => {
+  [ACTION.ADD_COMMENT]: (state: Item[], action: any) => {
     const { itemId, newCommentId } = action.payload
     const newComment = {
       id: newCommentId,
@@ -154,12 +156,12 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.EDIT_COMMENT]: (state, action) => {
+  [ACTION.EDIT_COMMENT]: (state: Item[], action: any) => {
     const { itemId, commentId, value } = action.payload
     updateComment(itemId, commentId, value)
     const newState = state.map((item) => {
       if (item.id === itemId) {
-        const updatedComments = item.comments.map((comment) =>
+        const updatedComments = item.comments?.map((comment) =>
           comment.id === commentId ? { ...comment, text: value } : comment,
         )
         return {
@@ -172,12 +174,12 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.DELETE_COMMENT]: (state, action) => {
+  [ACTION.DELETE_COMMENT]: (state: Item[], action: any) => {
     const { itemId, commentId } = action.payload
     deleteComment(itemId, commentId)
     const newState = state.map((item) => {
       if (item.id === itemId) {
-        const updatedComments = item.comments.filter(
+        const updatedComments = item.comments?.filter(
           (comment) => comment.id !== commentId,
         )
         return { ...item, comments: updatedComments }
@@ -187,7 +189,7 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.ADD_SUB_COMMENT]: (state, action) => {
+  [ACTION.ADD_SUB_COMMENT]: (state: Item[], action: any) => {
     const { itemId, subItemId } = action.payload
     const newComment = {
       id: crypto.randomUUID(),
@@ -197,7 +199,7 @@ const UPDATE_STATE_BY_ACTION = {
       if (item.id === itemId) {
         return {
           ...item,
-          subItems: item.subItems.map((subItem) => {
+          subItems: item.subItems?.map((subItem) => {
             if (subItem.id === subItemId) {
               return {
                 ...subItem,
@@ -213,15 +215,15 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.EDIT_SUB_COMMENT]: (state, action) => {
+  [ACTION.EDIT_SUB_COMMENT]: (state: Item[], action: any) => {
     const { itemId, subItemId, commentId, value } = action.payload
     const newState = state.map((item) => {
       if (item.id === itemId) {
         return {
           ...item,
-          subItems: item.subItems.map((subItem) => {
+          subItems: item.subItems?.map((subItem) => {
             if (subItem.id === subItemId) {
-              const updatedComments = subItem.comments.map((comment) =>
+              const updatedComments = subItem.comments?.map((comment) =>
                 comment.id === commentId
                   ? {
                       ...comment,
@@ -240,15 +242,15 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(newState)
     return newState
   },
-  [ACTION.DELETE_SUB_COMMENT]: (state, action) => {
+  [ACTION.DELETE_SUB_COMMENT]: (state: Item[], action: any) => {
     const { itemId, subItemId, commentId } = action.payload
     const newState = state.map((item) => {
       if (item.id === itemId) {
         return {
           ...item,
-          subItems: item.subItems.map((subItem) => {
+          subItems: item.subItems?.map((subItem) => {
             if (subItem.id === subItemId) {
-              const updatedComments = subItem.comments.filter(
+              const updatedComments = subItem.comments?.filter(
                 (comment) => comment.id !== commentId,
               )
               return { ...subItem, comments: updatedComments }
@@ -264,7 +266,7 @@ const UPDATE_STATE_BY_ACTION = {
   },
 }
 
-export const todoReducer = (state, action) => {
+export const todoReducer = (state, action: any) => {
   const updateState = UPDATE_STATE_BY_ACTION[action.type]
   return updateState ? updateState(state, action) : state
 }

@@ -1,6 +1,7 @@
 import { useComments } from '../hooks/useComments'
 import { useTodo } from '../hooks/useTodo'
 import Close from '../assets/Close'
+import { type Item, type Comment } from '../types'
 import './Comments.css'
 
 function Comments() {
@@ -21,10 +22,10 @@ function Comments() {
   const item = isSub
     ? list
         .find((i) => i.id === fatherId)
-        .subItems?.find((si) => si.id == itemId)
+        ?.subItems?.find((si) => si.id == itemId)
     : list.find((i) => i.id === itemId)
 
-  const newComment = () => {
+  const newComment = (): void => {
     if (isSub) {
       addSubComment(fatherId, itemId)
       return
@@ -32,7 +33,7 @@ function Comments() {
     addComment(itemId)
   }
 
-  const updateComment = (commentId, value) => {
+  const updateComment = (commentId: string, value: string): void => {
     if (isSub) {
       editSubComment(fatherId, itemId, commentId, value)
       return
@@ -40,7 +41,7 @@ function Comments() {
     editComment(itemId, commentId, value)
   }
 
-  const deleteFromComments = (commentId) => {
+  const deleteFromComments = (commentId: string): void => {
     if (isSub) {
       deleteSubComment(fatherId, itemId, commentId)
       return
@@ -48,7 +49,7 @@ function Comments() {
     deleteComment(itemId, commentId)
   }
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setOpen(false)
     setItemId('')
     setFatherId('')
@@ -67,7 +68,7 @@ function Comments() {
           <span>Tarea: {item?.text}</span>
         </header>
         <section>
-          {item?.comments?.map((c) => (
+          {item?.comments?.map((c: Comment) => (
             <div className="comment" key={c.id}>
               <input
                 className="text"

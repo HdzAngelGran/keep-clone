@@ -6,7 +6,7 @@ const SERVICE_URL = BASE_API_URL + PATH
 
 const pendingRequests = new Map()
 
-export async function updateItemStatus(itemId, status) {
+export async function updateItemStatus(itemId: string, status: boolean) {
   const request = await axios
     .put(`${SERVICE_URL}/${itemId}/status`, { status })
     .catch((error) => {
@@ -15,7 +15,7 @@ export async function updateItemStatus(itemId, status) {
   return request
 }
 
-export async function updateItemText(itemId, text) {
+export async function updateItemText(itemId: string, text: string) {
   const request = await axios
     .put(`${SERVICE_URL}/${itemId}/text`, { text })
     .catch((error) => {
@@ -24,7 +24,7 @@ export async function updateItemText(itemId, text) {
   return request
 }
 
-export async function deleteItem(itemId) {
+export async function deleteItem(itemId: string) {
   const requestKey = `${SERVICE_URL}/${itemId}`
   if (pendingRequests.has(requestKey)) return
 
@@ -40,7 +40,7 @@ export async function deleteItem(itemId) {
   pendingRequests.set(requestKey, request)
 }
 
-export async function updateComment(itemId, commentId, text) {
+export async function updateComment(itemId: string, commentId: string, text: string) {
   const request = await axios
     .put(`${SERVICE_URL}/${itemId}/comment/${commentId}`, { text })
     .catch((error) => {
@@ -49,7 +49,7 @@ export async function updateComment(itemId, commentId, text) {
   return request
 }
 
-export async function deleteComment(itemId, commentId) {
+export async function deleteComment(itemId: string, commentId: string) {
   const requestKey = `${SERVICE_URL}/${itemId}/comment/${commentId}`
   if (pendingRequests.has(requestKey)) return
 

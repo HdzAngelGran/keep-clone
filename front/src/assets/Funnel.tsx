@@ -1,4 +1,6 @@
-function Funnel({ width, height }) {
+import { IconProps } from '../types'
+
+function Funnel({ width, height }: IconProps) {
   return (
     <svg
       width={width}

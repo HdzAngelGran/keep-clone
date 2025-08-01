@@ -1,4 +1,6 @@
-function Arrow({ width, height }) {
+import { IconProps } from '../types'
+
+function Close({ width, height }: IconProps) {
   return (
     <svg
       width={width}
@@ -13,10 +15,10 @@ function Arrow({ width, height }) {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="m16.49 12 3.75 3.75m0 0-3.75 3.75m3.75-3.75H3.74V4.499"
+        d="M6 18 18 6M6 6l12 12"
       />
     </svg>
   )
 }
 
-export default Arrow
+export default Close

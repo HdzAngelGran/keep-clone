@@ -4,8 +4,14 @@ import Arrow from '../assets/Arrow'
 import Ellipsis from '../assets/Ellipsis'
 import './Item.css'
 import { useComments } from '../hooks/useComments'
+import { type Item } from '../types'
 
-function Item({ item, fatherId = '' }) {
+interface Props {
+  item: Item
+  fatherId?: string
+}
+
+const Item = ({ item, fatherId = '' }: Props) => {
   const { editItem, deleteItem, addSubItem, editSubItem, deleteSubItem } =
     useTodo()
   const { setOpen, setItemId, setFatherId } = useComments()
@@ -19,7 +25,7 @@ function Item({ item, fatherId = '' }) {
     marginLeft: isSub ? '2rem' : '0',
   }
 
-  const editStatus = () => {
+  const editStatus = (): void => {
     if (!isSub && !allSubItemsCompleted) return
 
     const newStatus = !item.completed
@@ -30,7 +36,7 @@ function Item({ item, fatherId = '' }) {
     editItem(item.id, 'completed', newStatus)
   }
 
-  const editText = (e) => {
+  const editText = (e: any): void => {
     const newText = e.target.value
     if (isSub) {
       editSubItem(fatherId, item.id, 'text', newText)
@@ -39,7 +45,7 @@ function Item({ item, fatherId = '' }) {
     editItem(item.id, 'text', newText)
   }
 
-  const deleteFromList = () => {
+  const deleteFromList = (): void => {
     if (isSub) {
       deleteSubItem(fatherId, item.id)
       return
@@ -47,7 +53,7 @@ function Item({ item, fatherId = '' }) {
     deleteItem(item.id)
   }
 
-  const openComments = () => {
+  const openComments = (): void => {
     setOpen(true)
     setItemId(item.id)
     if (isSub) setFatherId(fatherId)

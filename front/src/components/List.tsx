@@ -2,6 +2,7 @@ import { useEffect, useReducer, useState } from 'react'
 import { useTodo } from '../hooks/useTodo'
 import { useFilter } from '../hooks/useFilter'
 import { todoReducer, todoInitialState } from '../reducers/todo'
+import { type Item as ItemType } from '../types'
 
 import axios from 'axios'
 import Comments from './Comments'
@@ -23,11 +24,15 @@ function List() {
     setLoading(true)
     axios
       .get(SERVICE_URL)
-      .then((res) =>
-        dispatch({ type: 'INIT_LIST', payload: { list: res.data.list } }),
-      )
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false))
+      .then((res) => {
+        const data = res.data as { list: ItemType[] }
+        dispatch({ type: 'INIT_LIST', payload: { list: data.list } })
+        setLoading(false)
+      })
+      .catch((e) => {
+        console.error(e)
+        setLoading(false)
+      })
   }, [dispatch])
 
   return (
