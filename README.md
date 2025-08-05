@@ -1,40 +1,69 @@
-# todo-t1
+npm install
+npm run dev
 
-## Características del proyecto
+# 💡Keep Clone
 
-- Aplicación de lista de tareas (To-Do) con frontend en React y backend en Node.js/Express.
-- Permite crear, editar y eliminar tareas y subtareas.
-- Soporte para comentarios en tareas.
-- Sincronización de datos con una base de datos MongoDB.
-- Actualización en tiempo real del estado de las tareas.
-- Separación clara entre frontend y backend para facilitar el desarrollo y mantenimiento.
+<div align="center">
 
-## Configuración del entorno de desarrollo
+![React Badge](https://img.shields.io/badge/React-58c4dc?logo=react&logoColor=fff&)
+![TypeScript Badge](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=fff&)
+![Tanstack Query Badge](https://img.shields.io/badge/Tanstack_Query-ef4444?logo=reactquery&logoColor=fff&)
+![Axios Badge](https://img.shields.io/badge/Axios-671ddf?logo=axios&logoColor=fff&)
 
-Este proyecto contiene aplicaciones tanto de backend como de frontend.
+![Node.js Badge](https://img.shields.io/badge/Node.js-417e38?logo=node.js&logoColor=fff&)
+![Express Badge](https://img.shields.io/badge/Express-000?logo=express&logoColor=fff&)
+![mongoose Badge](https://img.shields.io/badge/mongoose-800?logo=mongoose&logoColor=fff&)
+![MongoDB Badge](https://img.shields.io/badge/MongoDB-00684a?logo=mongodb&logoColor=fff&)
 
-### Requisitos previos
+</div>
 
-- Node.js y npm instalados
+## Project Features
 
-### Instalar dependencias
+- Keep clone (To-Do) application with React frontend and Node.js/Express backend.
+- Allows you to create, edit, and delete tasks and subtasks.
+- Data synchronization with a MongoDB database.
+- Real-time update of task status.
+- Clear separation between frontend and backend for easier development and maintenance.
 
-Desde el directorio raíz, ejecuta:
+## Improvements
+
+- Add a task by pressing enter in any task
+- Deleted a task by backspacing a task without text
+- Change a task to a subtask and viceversa
+- Drag n' drop to items in the list
+- Add new list
+
+## Development Environment Setup
+
+This project contains both backend and frontend applications.
+
+### Prerequisites
+
+- Node.js and npm installed
+- Add and .env in the back directory with these variables for your MongoDB:
+  DB_USER
+  DB_PASSWORD
+  DB_HOST
+  DB_NAME
+
+### Install dependencies
+
+From the root directory, run:
 
 ```
 npm install
 ```
 
-Esto instalará las dependencias de desarrollo del directorio raíz. También debes instalar las dependencias en las carpetas `back` y `front`:
+This will install the root development dependencies. You should also install dependencies in the `back` and `front` folders:
 
 ```
 cd back && npm install
 cd ../front && npm install
 ```
 
-### Ejecutar backend y frontend
+### Run backend and frontend
 
-Desde el directorio raíz, simplemente ejecuta:
+From the root directory, simply run:
 
 ```
 npm run dev
