@@ -1,16 +1,28 @@
 .item {
-  margin-bottom: 0.3rem;
-  padding: 0.5rem;
+  margin-inline: 1rem;
+  padding-block: 0.5rem;
   width: 100%;
   display: grid;
-  gap: 0.2rem;
-  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  grid-template-columns: auto 1fr 0.3fr;
   border-radius: 0.7rem;
   transition: 0.4s;
-}
-
-.item:hover {
-  background: black;
+  &:hover {
+    & .action > * {
+      display: flex;
+    }
+  }
+  &[data-completed='true'] {
+    & .status {
+      background-color: darkgrey;
+    }
+    & .text {
+      text-decoration: line-through;
+    }
+  }
+  &[data-sub-item='true'] .status {
+    margin-left: 1.5rem;
+  }
 }
 
 .status {
@@ -24,10 +36,6 @@
   transition: 0.4s;
 }
 
-.item[data-completed='true'] .status {
-  background-color: darkgrey;
-}
-
 .text {
   height: 0.8rem;
   margin: 0;
@@ -39,25 +47,24 @@
   border-radius: 0;
   outline: none;
   transition: 0.4s;
-}
-
-.text:focus {
-  border-bottom: 0.1rem solid white;
-}
-
-.item[data-completed='true'] .text {
-  text-decoration: line-through;
+  &:focus {
+    border-bottom: 0.1rem solid white;
+    & + .action > * {
+      display: flex;
+    }
+  }
 }
 
 .action {
   display: flex;
   align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .close,
 .add-sub,
 .comments {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   cursor: pointer;
