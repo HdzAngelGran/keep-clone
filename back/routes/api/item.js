@@ -172,7 +172,7 @@ router.post("/:itemId/sub-item", async (req, res) => {
   }
 });
 
-router.put("/:itemId/subItem/:subItemId/text", async (req, res) => {
+router.put("/:itemId/sub-item/:subItemId/text", async (req, res) => {
   const { itemId, subItemId } = req.params;
   const text = req.body.text;
   try {
@@ -203,7 +203,7 @@ router.put("/:itemId/subItem/:subItemId/text", async (req, res) => {
   }
 });
 
-router.put("/:itemId/subItem/:subItemId/status", async (req, res) => {
+router.put("/:itemId/sub-item/:subItemId/status", async (req, res) => {
   const { itemId, subItemId } = req.params;
   const status = req.body.status;
   try {
@@ -234,7 +234,7 @@ router.put("/:itemId/subItem/:subItemId/status", async (req, res) => {
   }
 });
 
-router.delete("/:itemId/subItem/:subItemId", async (req, res) => {
+router.delete("/:itemId/sub-item/:subItemId", async (req, res) => {
   const { itemId, subItemId } = req.params;
   try {
     const list = await List.findOne({ user, "items._id": itemId }).then(
