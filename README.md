@@ -1,6 +1,3 @@
-npm install
-npm run dev
-
 # 💡Keep Clone
 
 <div align="center">
