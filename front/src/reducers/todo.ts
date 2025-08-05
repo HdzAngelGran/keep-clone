@@ -1,4 +1,5 @@
 import { Item } from '../types'
+import { ACTION } from '../const'
 
 import {
   updateItemStatus,
@@ -16,22 +17,6 @@ import {
 export const todoInitialState: Item[] = JSON.parse(
   localStorage.getItem('list') || '[]',
 )
-
-export const ACTION = {
-  INIT_LIST: 'INIT_LIST',
-  ADD_ITEM: 'ADD_ITEM',
-  EDIT_ITEM: 'EDIT_ITEM',
-  DELETE_ITEM: 'DELETE_ITEM',
-  ADD_SUB_ITEM: 'ADD_SUB_ITEM',
-  EDIT_SUB_ITEM: 'EDIT_SUB_ITEM',
-  DELETE_SUB_ITEM: 'DELETE_SUB_ITEM',
-  ADD_COMMENT: 'ADD_COMMENT',
-  EDIT_COMMENT: 'EDIT_COMMENT',
-  DELETE_COMMENT: 'DELETE_COMMENT',
-  ADD_SUB_COMMENT: 'ADD_SUB_COMMENT',
-  EDIT_SUB_COMMENT: 'EDIT_SUB_COMMENT',
-  DELETE_SUB_COMMENT: 'DELETE_SUB_COMMENT',
-}
 
 export const updateLocalStorage = (state: Item[]) => {
   localStorage.setItem('list', JSON.stringify(state))
@@ -57,14 +42,13 @@ const UPDATE_STATE_BY_ACTION = {
     return newState
   },
   [ACTION.EDIT_ITEM]: (state: Item[], action: any) => {
-    const { itemId, attribute, value } = action.payload
-    if (attribute === 'completed') {
-      updateItemStatus(itemId, value)
-    } else if (attribute === 'text') {
-      updateItemText(itemId, value)
-    }
+    const { itemId, value } = action.payload
+    const isStatus = typeof value === 'boolean'
+    isStatus ? updateItemStatus(itemId, value) : updateItemText(itemId, value)
     const newState = state.map((item) =>
-      item.id === itemId ? { ...item, [attribute]: value } : item,
+      item.id === itemId
+        ? { ...item, [isStatus ? 'completed' : 'text']: value }
+        : item,
     )
     updateLocalStorage(newState)
     return newState
@@ -84,7 +68,7 @@ const UPDATE_STATE_BY_ACTION = {
       text: '',
       comments: [],
     }
-    const newState = state.map((item) =>
+    const newState: Item[] = state.map((item) =>
       item.id === itemId
         ? {
             ...item,
@@ -97,27 +81,23 @@ const UPDATE_STATE_BY_ACTION = {
     return newState
   },
   [ACTION.EDIT_SUB_ITEM]: (state: Item[], action: any) => {
-    const { itemId, subItemId, attribute, value } = action.payload
-    if (attribute === 'completed') {
+    const { itemId, subItemId, value } = action.payload
+    const isStatus = typeof value === 'boolean'
+    if (isStatus) {
       updateSubItemStatus(itemId, subItemId, value)
-    } else if (attribute === 'text') {
-      updateSubItemText(itemId, subItemId, value)
-    }
-    const isStatusPending = attribute === 'completed' && value == false
+      if (!value) updateItemStatus(itemId, false)
+    } else updateSubItemText(itemId, subItemId, value)
 
-    if (isStatusPending) {
-      updateItemStatus(itemId, false)
-    }
     const newState = state.map((item) => {
       if (item.id === itemId) {
         const updatedSubItems = item.subItems?.map((subItem) =>
           subItem.id === subItemId
-            ? { ...subItem, [attribute]: value }
+            ? { ...subItem, [isStatus ? 'completed' : 'text']: value }
             : subItem,
         )
         return {
           ...item,
-          completed: isStatusPending ? false : item.completed,
+          completed: isStatus && !value ? false : item.completed,
           subItems: updatedSubItems,
         }
       }

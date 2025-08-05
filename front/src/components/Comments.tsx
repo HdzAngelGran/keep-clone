@@ -3,6 +3,8 @@ import { useTodo } from '../hooks/useTodo'
 import Close from '../assets/Close'
 import { type Item, type Comment } from '../types'
 import './Comments.css'
+import { useMutation } from '@tanstack/react-query'
+import { createComment } from '../service/item'
 
 function Comments() {
   const { open, setOpen, itemId, setItemId, fatherId, setFatherId } =
@@ -25,12 +27,19 @@ function Comments() {
         ?.subItems?.find((si) => si.id == itemId)
     : list.find((i) => i.id === itemId)
 
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      const newCommentId = await createComment(itemId)
+      addComment(itemId, newCommentId)
+    },
+  })
+
   const newComment = (): void => {
     if (isSub) {
       addSubComment(fatherId, itemId)
       return
     }
-    addComment(itemId)
+    mutate()
   }
 
   const updateComment = (commentId: string, value: string): void => {

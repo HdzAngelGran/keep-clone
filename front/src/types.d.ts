@@ -4,7 +4,14 @@ export interface Item {
   id: string
   text: string
   completed: boolean
-  subItems?: Item[]
+  subItems: SubItem[]
+  comments: Comment[]
+}
+
+export interface SubItem {
+  id: string
+  text: string
+  completed: boolean
   comments: Comment[]
 }
 
@@ -37,18 +44,17 @@ export interface FilterContextType {
 export interface TodoContextType {
   list: Item[]
   initList: (list: Item[]) => void
-  addItem: () => void
-  editItem: (itemId: string, attribute: string, value: string | boolean) => void
+  addItem: (itemId: string) => void
+  editItem: (itemId: string, value: string | boolean) => void
   deleteItem: (itemId: string) => void
-  addSubItem: (itemId: string) => void
+  addSubItem: (itemId: string, newSubItemId: string) => void
   editSubItem: (
     itemId: string,
     subItemId: string,
-    attribute: string,
     value: string | boolean,
   ) => void
   deleteSubItem: (itemId: string, subItemId: string) => void
-  addComment: (itemId: string) => void
+  addComment: (itemId: string, newCommentId: string) => void
   editComment: (itemId: string, commentId: string, value: string) => void
   deleteComment: (itemId: string, commentId: string) => void
   addSubComment: (itemId: string, subItemId: string) => void

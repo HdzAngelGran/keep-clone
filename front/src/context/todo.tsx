@@ -1,46 +1,24 @@
 import { createContext, ReactElement, useReducer } from 'react'
 import { todoReducer, todoInitialState } from '../reducers/todo'
-
-import axios from 'axios'
 import { Item, TodoContextType } from '../types'
-
-const SERVICE_URL = 'http://localhost:8080/api/v1/item'
 
 const pendingRequests = new Map()
 
 export const TodoContext = createContext<TodoContextType>({
   list: todoInitialState,
   initList: () => {},
-  addItem: () => {},
-  editItem: (
-    _itemId: string,
-    _attribute: string,
-    _value: string | boolean,
-  ) => {},
-  deleteItem: (_itemId: string) => {},
-  addSubItem: (_itemId: string) => {},
-  editSubItem: (
-    _itemId: string,
-    _subItemId: string,
-    _attribute: string,
-    _value: string | boolean,
-  ) => {},
-  deleteSubItem: (_itemId: string, _subItemId: string) => {},
-  addComment: (_itemId: string) => {},
-  editComment: (_itemId: string, _commentId: string, _value: string) => {},
-  deleteComment: (_itemId: string, _commentId: string) => {},
-  addSubComment: (_itemId: string, _subItemId: string) => {},
-  editSubComment: (
-    _itemId: string,
-    _subItemId: string,
-    _commentId: string,
-    _value: string,
-  ) => {},
-  deleteSubComment: (
-    _itemId: string,
-    _subItemId: string,
-    _commentId: string,
-  ) => {},
+  addItem: (_itemId) => {},
+  editItem: (_itemId, _value) => {},
+  deleteItem: (_itemId) => {},
+  addSubItem: (_itemId, _newSubItemId) => {},
+  editSubItem: (_itemId, _subItemId, _value) => {},
+  deleteSubItem: (_itemId, _subItemId) => {},
+  addComment: (_itemId, _newCommentId) => {},
+  editComment: (_itemId, _commentId, _value) => {},
+  deleteComment: (_itemId, _commentId) => {},
+  addSubComment: (_itemId, _subItemId) => {},
+  editSubComment: (_itemId, _subItemId, _commentId, _value) => {},
+  deleteSubComment: (_itemId, _subItemId, _commentId) => {},
 })
 
 function useTodoReducer() {
@@ -50,66 +28,33 @@ function useTodoReducer() {
     dispatch({ type: 'INIT_LIST', payload: { list } })
   }
 
-  const addItem = () => {
-    const requestKey = `${SERVICE_URL}`
-    if (pendingRequests.has(requestKey)) return
-
-    const request = axios
-      .post(SERVICE_URL)
-      .then((res) => {
-        const data = res.data as { newItemId: string }
-        dispatch({ type: 'ADD_ITEM', payload: data.newItemId })
-        pendingRequests.delete(requestKey)
-      })
-      .catch((error) => {
-        console.error(error)
-        pendingRequests.delete(requestKey)
-      })
-    pendingRequests.set(requestKey, request)
+  const addItem = (itemId: string) => {
+    dispatch({ type: 'ADD_ITEM', payload: { itemId } })
   }
 
-  const editItem = (
-    itemId: string,
-    attribute: string,
-    value: string | boolean,
-  ) => {
-    dispatch({ type: 'EDIT_ITEM', payload: { itemId, attribute, value } })
+  const editItem = (itemId: string, value: string | boolean) => {
+    dispatch({ type: 'EDIT_ITEM', payload: { itemId, value } })
   }
 
   const deleteItem = (itemId: string) => {
     dispatch({ type: 'DELETE_ITEM', payload: itemId })
   }
 
-  const addSubItem = (itemId: string) => {
-    const requestKey = `${SERVICE_URL}/${itemId}/sub-item`
-    if (pendingRequests.has(requestKey)) return
-
-    const request = axios
-      .post(`${SERVICE_URL}/${itemId}/sub-item`)
-      .then((res) => {
-        const data = res.data as { newSubItemId: string }
-        dispatch({
-          type: 'ADD_SUB_ITEM',
-          payload: { itemId, newSubItemId: data.newSubItemId },
-        })
-        pendingRequests.delete(requestKey)
-      })
-      .catch((error) => {
-        console.error(error)
-        pendingRequests.delete(requestKey)
-      })
-    pendingRequests.set(requestKey, request)
+  const addSubItem = (itemId: string, newSubItemId: string) => {
+    dispatch({
+      type: 'ADD_SUB_ITEM',
+      payload: { itemId, newSubItemId },
+    })
   }
 
   const editSubItem = (
     itemId: string,
     subItemId: string,
-    attribute: string,
     value: string | boolean,
   ) => {
     dispatch({
       type: 'EDIT_SUB_ITEM',
-      payload: { itemId, subItemId, attribute, value },
+      payload: { itemId, subItemId, value },
     })
   }
 
@@ -117,25 +62,11 @@ function useTodoReducer() {
     dispatch({ type: 'DELETE_SUB_ITEM', payload: { itemId, subItemId } })
   }
 
-  const addComment = (itemId: string): void => {
-    const url = `${SERVICE_URL}/${itemId}/comment`
-    const requestKey = url
-    if (pendingRequests.has(requestKey)) return
-    const request = axios
-      .post(url)
-      .then((res) => {
-        const data = res.data as { newCommentId: string }
-        dispatch({
-          type: 'ADD_COMMENT',
-          payload: { itemId, newCommentId: data.newCommentId },
-        })
-        pendingRequests.delete(requestKey)
-      })
-      .catch((error) => {
-        console.error(error)
-        pendingRequests.delete(requestKey)
-      })
-    pendingRequests.set(requestKey, request)
+  const addComment = (itemId: string, newCommentId: string): void => {
+    dispatch({
+      type: 'ADD_COMMENT',
+      payload: { itemId, newCommentId },
+    })
   }
 
   const editComment = (itemId: string, commentId: string, value: string) => {

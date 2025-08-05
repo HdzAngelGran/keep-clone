@@ -3,15 +3,16 @@ import { ITEM_PATH, SUB_ITEM_PATH } from './index'
 
 const pendingRequests = new Map()
 
-export async function addSubItem(itemId: string): Promise<string | void> {
+export async function createSubItem(itemId: string): Promise<string> {
   return await axios
-    .post(`${ITEM_PATH}/${itemId}/${SUB_ITEM_PATH}`)
+    .post(`${ITEM_PATH}/${itemId}${SUB_ITEM_PATH}`)
     .then((res) => {
       const data = res.data as { newSubItemId: string }
       return data.newSubItemId
     })
     .catch((error) => {
       console.error(error)
+      return ''
     })
 }
 

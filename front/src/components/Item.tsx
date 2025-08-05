@@ -4,10 +4,12 @@ import Arrow from '../assets/Arrow'
 import Ellipsis from '../assets/Ellipsis'
 import './Item.css'
 import { useComments } from '../hooks/useComments'
-import { type Item } from '../types'
+import { SubItem, type Item } from '../types'
+import { useMutation } from '@tanstack/react-query'
+import { createSubItem } from '../service/subitem'
 
 interface Props {
-  item: Item
+  item: Item | SubItem
   fatherId?: string
 }
 
@@ -16,41 +18,39 @@ const Item = ({ item, fatherId = '' }: Props) => {
     useTodo()
   const { setOpen, setItemId, setFatherId } = useComments()
 
-  const isSub = fatherId !== ''
-  const allSubItemsCompleted = item.subItems?.every(
-    (sl) => sl.completed == true,
-  )
+  const isSub = !('subItems' in item)
+
+  const allSubItemsCompleted = isSub
+    ? true
+    : item.subItems.every((sl) => sl.completed == true)
 
   const style = {
     marginLeft: isSub ? '2rem' : '0',
   }
 
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      const newSubItemId = await createSubItem(item.id)
+      addSubItem(item.id, newSubItemId)
+    },
+  })
+
   const editStatus = (): void => {
-    if (!isSub && !allSubItemsCompleted) return
+    if (!allSubItemsCompleted) return
 
     const newStatus = !item.completed
-    if (isSub) {
-      editSubItem(fatherId, item.id, 'completed', newStatus)
-      return
-    }
-    editItem(item.id, 'completed', newStatus)
+    isSub
+      ? editSubItem(fatherId, item.id, newStatus)
+      : editItem(item.id, newStatus)
   }
 
   const editText = (e: any): void => {
     const newText = e.target.value
-    if (isSub) {
-      editSubItem(fatherId, item.id, 'text', newText)
-      return
-    }
-    editItem(item.id, 'text', newText)
+    isSub ? editSubItem(fatherId, item.id, newText) : editItem(item.id, newText)
   }
 
   const deleteFromList = (): void => {
-    if (isSub) {
-      deleteSubItem(fatherId, item.id)
-      return
-    }
-    deleteItem(item.id)
+    isSub ? deleteSubItem(fatherId, item.id) : deleteItem(item.id)
   }
 
   const openComments = (): void => {
@@ -74,7 +74,7 @@ const Item = ({ item, fatherId = '' }: Props) => {
             <div
               title="Agregar SubTarea"
               className="add-sub"
-              onClick={() => addSubItem(item.id)}
+              onClick={() => mutate()}
             >
               <Arrow width={'1.3rem'} height={'1.3rem'} />
             </div>
@@ -94,7 +94,7 @@ const Item = ({ item, fatherId = '' }: Props) => {
         </div>
       </div>
       {!isSub &&
-        item.subItems?.map((sub) => (
+        item.subItems.map((sub: SubItem) => (
           <Item key={sub.id} item={sub} fatherId={item.id} />
         ))}
     </>

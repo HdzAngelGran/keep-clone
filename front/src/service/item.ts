@@ -3,7 +3,7 @@ import { ITEM_PATH } from './index'
 
 const pendingRequests = new Map()
 
-export async function addItem(): Promise<string | void> {
+export async function createItem(): Promise<string> {
   return await axios
     .post(ITEM_PATH)
     .then((res) => {
@@ -12,6 +12,7 @@ export async function addItem(): Promise<string | void> {
     })
     .catch((error) => {
       console.error(error)
+      return ''
     })
 }
 
@@ -49,7 +50,7 @@ export async function deleteItem(itemId: string) {
   pendingRequests.set(requestKey, request)
 }
 
-export async function addComment(itemId: string): Promise<string | void> {
+export async function createComment(itemId: string): Promise<string> {
   return await axios
     .post(`${ITEM_PATH}/${itemId}/comment`)
     .then((res) => {
@@ -58,6 +59,7 @@ export async function addComment(itemId: string): Promise<string | void> {
     })
     .catch((error) => {
       console.error(error)
+      return ''
     })
 }
 
