@@ -4,7 +4,6 @@ import { useFilter } from '../hooks/useFilter'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { getList } from '../service/list'
 
-import Comments from './Comments'
 import Item from './Item'
 import './List.css'
 import { Item as ItemType } from '../types'
@@ -37,7 +36,6 @@ function List() {
 
   return (
     <>
-      <Comments />
       <main className="list">
         {filteredList.map((item) => (
           <Item key={item.id} item={item} />

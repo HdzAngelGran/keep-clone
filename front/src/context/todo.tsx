@@ -13,12 +13,6 @@ export const TodoContext = createContext<TodoContextType>({
   addSubItem: (_itemId, _newSubItemId) => {},
   editSubItem: (_itemId, _subItemId, _value) => {},
   deleteSubItem: (_itemId, _subItemId) => {},
-  addComment: (_itemId, _newCommentId) => {},
-  editComment: (_itemId, _commentId, _value) => {},
-  deleteComment: (_itemId, _commentId) => {},
-  addSubComment: (_itemId, _subItemId) => {},
-  editSubComment: (_itemId, _subItemId, _commentId, _value) => {},
-  deleteSubComment: (_itemId, _subItemId, _commentId) => {},
 })
 
 function useTodoReducer() {
@@ -62,48 +56,6 @@ function useTodoReducer() {
     dispatch({ type: 'DELETE_SUB_ITEM', payload: { itemId, subItemId } })
   }
 
-  const addComment = (itemId: string, newCommentId: string): void => {
-    dispatch({
-      type: 'ADD_COMMENT',
-      payload: { itemId, newCommentId },
-    })
-  }
-
-  const editComment = (itemId: string, commentId: string, value: string) => {
-    dispatch({ type: 'EDIT_COMMENT', payload: { itemId, commentId, value } })
-  }
-
-  const deleteComment = (itemId: string, commentId: string) => {
-    dispatch({ type: 'DELETE_COMMENT', payload: { itemId, commentId } })
-  }
-
-  const addSubComment = (itemId: string, subItemId: string) => {
-    dispatch({ type: 'ADD_SUB_COMMENT', payload: { itemId, subItemId } })
-  }
-
-  const editSubComment = (
-    itemId: string,
-    subItemId: string,
-    commentId: string,
-    value: string,
-  ) => {
-    dispatch({
-      type: 'EDIT_SUB_COMMENT',
-      payload: { itemId, subItemId, commentId, value },
-    })
-  }
-
-  const deleteSubComment = (
-    itemId: string,
-    subItemId: string,
-    commentId: string,
-  ) => {
-    dispatch({
-      type: 'DELETE_SUB_COMMENT',
-      payload: { itemId, subItemId, commentId },
-    })
-  }
-
   return {
     state,
     initList,
@@ -113,12 +65,6 @@ function useTodoReducer() {
     addSubItem,
     editSubItem,
     deleteSubItem,
-    addComment,
-    editComment,
-    deleteComment,
-    addSubComment,
-    editSubComment,
-    deleteSubComment,
   }
 }
 
@@ -132,12 +78,6 @@ export function TodoProvider({ children }: any): ReactElement {
     addSubItem,
     editSubItem,
     deleteSubItem,
-    addComment,
-    editComment,
-    deleteComment,
-    addSubComment,
-    editSubComment,
-    deleteSubComment,
   } = useTodoReducer()
 
   return (
@@ -151,12 +91,6 @@ export function TodoProvider({ children }: any): ReactElement {
         addSubItem,
         editSubItem,
         deleteSubItem,
-        addComment,
-        editComment,
-        deleteComment,
-        addSubComment,
-        editSubComment,
-        deleteSubComment,
       }}
     >
       {children}

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { CommentSchema } = require("./comment.model");
 
 const SubItemSchema = mongoose.Schema(
   {
@@ -11,10 +10,6 @@ const SubItemSchema = mongoose.Schema(
     completed: {
       type: Boolean,
       default: false,
-      required: false,
-    },
-    comments: {
-      type: [CommentSchema],
       required: false,
     },
   },

@@ -62,8 +62,7 @@
 }
 
 .close,
-.add-sub,
-.comments {
+.add-sub {
   display: none;
   justify-content: center;
   align-items: center;

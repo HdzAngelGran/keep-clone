@@ -1,13 +1,7 @@
 import { Item } from '../types'
 import { ACTION } from '../const'
 
-import {
-  updateItemStatus,
-  updateItemText,
-  deleteItem,
-  updateComment,
-  deleteComment,
-} from '../service/item'
+import { updateItemStatus, updateItemText, deleteItem } from '../service/item'
 import {
   deleteSubItem,
   updateSubItemStatus,
@@ -35,7 +29,6 @@ const UPDATE_STATE_BY_ACTION = {
       completed: false,
       text: '',
       subItems: [],
-      comments: [],
     }
     const newState = [...state, newItem]
     updateLocalStorage(newState)
@@ -66,7 +59,6 @@ const UPDATE_STATE_BY_ACTION = {
       id: newSubItemId,
       completed: false,
       text: '',
-      comments: [],
     }
     const newState: Item[] = state.map((item) =>
       item.id === itemId
@@ -115,131 +107,6 @@ const UPDATE_STATE_BY_ACTION = {
           (subItem) => subItem.id !== subItemId,
         )
         return { ...item, subItems: updatedSubItems }
-      }
-      return item
-    })
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.ADD_COMMENT]: (state: Item[], action: any) => {
-    const { itemId, newCommentId } = action.payload
-    const newComment = {
-      id: newCommentId,
-      text: '',
-    }
-    const newState = state.map((item) =>
-      item.id === itemId
-        ? {
-            ...item,
-            comments: [...(item.comments || []), newComment],
-          }
-        : item,
-    )
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.EDIT_COMMENT]: (state: Item[], action: any) => {
-    const { itemId, commentId, value } = action.payload
-    updateComment(itemId, commentId, value)
-    const newState = state.map((item) => {
-      if (item.id === itemId) {
-        const updatedComments = item.comments?.map((comment) =>
-          comment.id === commentId ? { ...comment, text: value } : comment,
-        )
-        return {
-          ...item,
-          comments: updatedComments,
-        }
-      }
-      return item
-    })
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.DELETE_COMMENT]: (state: Item[], action: any) => {
-    const { itemId, commentId } = action.payload
-    deleteComment(itemId, commentId)
-    const newState = state.map((item) => {
-      if (item.id === itemId) {
-        const updatedComments = item.comments?.filter(
-          (comment) => comment.id !== commentId,
-        )
-        return { ...item, comments: updatedComments }
-      }
-      return item
-    })
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.ADD_SUB_COMMENT]: (state: Item[], action: any) => {
-    const { itemId, subItemId } = action.payload
-    const newComment = {
-      id: crypto.randomUUID(),
-      text: '',
-    }
-    const newState = state.map((item) => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          subItems: item.subItems?.map((subItem) => {
-            if (subItem.id === subItemId) {
-              return {
-                ...subItem,
-                comments: [...(subItem.comments || []), newComment],
-              }
-            }
-            return subItem
-          }),
-        }
-      }
-      return item
-    })
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.EDIT_SUB_COMMENT]: (state: Item[], action: any) => {
-    const { itemId, subItemId, commentId, value } = action.payload
-    const newState = state.map((item) => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          subItems: item.subItems?.map((subItem) => {
-            if (subItem.id === subItemId) {
-              const updatedComments = subItem.comments?.map((comment) =>
-                comment.id === commentId
-                  ? {
-                      ...comment,
-                      text: value,
-                    }
-                  : comment,
-              )
-              return { ...subItem, comments: updatedComments }
-            }
-            return subItem
-          }),
-        }
-      }
-      return item
-    })
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.DELETE_SUB_COMMENT]: (state: Item[], action: any) => {
-    const { itemId, subItemId, commentId } = action.payload
-    const newState = state.map((item) => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          subItems: item.subItems?.map((subItem) => {
-            if (subItem.id === subItemId) {
-              const updatedComments = subItem.comments?.filter(
-                (comment) => comment.id !== commentId,
-              )
-              return { ...subItem, comments: updatedComments }
-            }
-            return subItem
-          }),
-        }
       }
       return item
     })

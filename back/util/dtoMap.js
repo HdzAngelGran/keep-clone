@@ -14,7 +14,6 @@ function mapItemDto(item) {
     text: item.text,
     completed: item.completed,
     subItems: item.subItems?.map((subItem) => mapSubItemDto(subItem)) || [],
-    comments: item.comments?.map((comment) => mapCommentDto(comment)) || [],
   };
 }
 
@@ -23,14 +22,6 @@ function mapSubItemDto(subItem) {
     id: subItem._id,
     text: subItem.text,
     completed: subItem.completed,
-    comments: subItem.comments?.map((comment) => mapCommentDto(comment)) || [],
-  };
-}
-
-function mapCommentDto(comment) {
-  return {
-    id: comment._id,
-    text: comment.text,
   };
 }
 

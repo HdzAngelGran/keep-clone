@@ -1,9 +1,7 @@
 import { useTodo } from '../hooks/useTodo'
 import Close from '../assets/Close'
 import Arrow from '../assets/Arrow'
-import Ellipsis from '../assets/Ellipsis'
 import './Item.css'
-import { useComments } from '../hooks/useComments'
 import { SubItem, type Item } from '../types'
 import { useMutation } from '@tanstack/react-query'
 import { createSubItem } from '../service/subitem'
@@ -16,7 +14,6 @@ interface Props {
 const Item = ({ item, fatherId = '' }: Props) => {
   const { editItem, deleteItem, addSubItem, editSubItem, deleteSubItem } =
     useTodo()
-  const { setOpen, setItemId, setFatherId } = useComments()
 
   const isSub = !('subItems' in item)
 
@@ -53,12 +50,6 @@ const Item = ({ item, fatherId = '' }: Props) => {
     isSub ? deleteSubItem(fatherId, item.id) : deleteItem(item.id)
   }
 
-  const openComments = (): void => {
-    setOpen(true)
-    setItemId(item.id)
-    if (isSub) setFatherId(fatherId)
-  }
-
   return (
     <>
       <div className="item" data-completed={item.completed}>
@@ -82,15 +73,6 @@ const Item = ({ item, fatherId = '' }: Props) => {
           <div title="Eliminar" className="close" onClick={deleteFromList}>
             <Close width={'1.3rem'} height={'1.3rem'} />
           </div>
-          {!isSub && (
-            <div
-              title="Comentarios"
-              className="comments"
-              onClick={openComments}
-            >
-              <Ellipsis width={'1.3rem'} height={'1.3rem'} />
-            </div>
-          )}
         </div>
       </div>
       {!isSub &&
