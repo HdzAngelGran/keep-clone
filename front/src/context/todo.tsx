@@ -7,10 +7,10 @@ const pendingRequests = new Map()
 export const TodoContext = createContext<TodoContextType>({
   list: todoInitialState,
   initList: () => {},
-  addItem: (_itemId) => {},
+  addItem: () => {},
   editItem: (_itemId, _value) => {},
   deleteItem: (_itemId) => {},
-  addSubItem: (_itemId, _newSubItemId) => {},
+  addSubItem: (_itemId) => {},
   editSubItem: (_itemId, _subItemId, _value) => {},
   deleteSubItem: (_itemId, _subItemId) => {},
 })
@@ -22,8 +22,8 @@ function useTodoReducer() {
     dispatch({ type: 'INIT_LIST', payload: { list } })
   }
 
-  const addItem = (itemId: string) => {
-    dispatch({ type: 'ADD_ITEM', payload: { itemId } })
+  const addItem = () => {
+    dispatch({ type: 'ADD_ITEM' })
   }
 
   const editItem = (itemId: string, value: string | boolean) => {
@@ -34,11 +34,8 @@ function useTodoReducer() {
     dispatch({ type: 'DELETE_ITEM', payload: itemId })
   }
 
-  const addSubItem = (itemId: string, newSubItemId: string) => {
-    dispatch({
-      type: 'ADD_SUB_ITEM',
-      payload: { itemId, newSubItemId },
-    })
+  const addSubItem = (itemId: string) => {
+    dispatch({ type: 'ADD_SUB_ITEM', payload: { itemId } })
   }
 
   const editSubItem = (

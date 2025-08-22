@@ -3,8 +3,6 @@ import Close from '../assets/Close'
 import Arrow from '../assets/Arrow'
 import './Item.css'
 import { SubItem, type Item } from '../types'
-import { useMutation } from '@tanstack/react-query'
-import { createSubItem } from '../service/subitem'
 
 interface Props {
   item: Item | SubItem
@@ -25,12 +23,7 @@ const Item = ({ item, fatherId = '' }: Props) => {
     marginLeft: isSub ? '2rem' : '0',
   }
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      const newSubItemId = await createSubItem(item.id)
-      addSubItem(item.id, newSubItemId)
-    },
-  })
+  const createSubItem = () => addSubItem(item.id)
 
   const editStatus = (): void => {
     if (!allSubItemsCompleted) return
@@ -65,7 +58,7 @@ const Item = ({ item, fatherId = '' }: Props) => {
             <div
               title="Agregar SubTarea"
               className="add-sub"
-              onClick={() => mutate()}
+              onClick={createSubItem}
             >
               <Arrow width={'1.3rem'} height={'1.3rem'} />
             </div>

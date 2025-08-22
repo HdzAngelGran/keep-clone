@@ -13,26 +13,9 @@ export const SERVICE_URL = 'http://localhost:8080/api/v1/list'
 
 function List() {
   const { filterList } = useFilter()
-  const { list, initList, addItem } = useTodo()
+  const { list, addItem } = useTodo()
 
   const filteredList = filterList(list)
-
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      const newItemId = await createItem()
-      addItem(newItemId)
-    },
-  })
-
-  const { isPending, data = [] } = useQuery({
-    queryKey: ['lists'],
-    queryFn: getList,
-    refetchOnWindowFocus: false,
-  })
-
-  useEffect(() => {
-    if (!isPending) initList(data as ItemType[])
-  }, [data, isPending])
 
   return (
     <>
@@ -40,7 +23,7 @@ function List() {
         {filteredList.map((item) => (
           <Item key={item.id} item={item} />
         ))}
-        <button type="button" onClick={() => mutate()}>
+        <button type="button" onClick={addItem}>
           + Nueva tarea
         </button>
       </main>

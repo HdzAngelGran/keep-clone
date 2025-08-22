@@ -28,10 +28,10 @@ export interface FilterContextType {
 export interface TodoContextType {
   list: Item[]
   initList: (list: Item[]) => void
-  addItem: (itemId: string) => void
+  addItem: () => void
   editItem: (itemId: string, value: string | boolean) => void
   deleteItem: (itemId: string) => void
-  addSubItem: (itemId: string, newSubItemId: string) => void
+  addSubItem: (itemId: string) => void
   editSubItem: (
     itemId: string,
     subItemId: string,
