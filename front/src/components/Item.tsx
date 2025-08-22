@@ -15,10 +15,6 @@ const Item = ({ item, fatherId = '' }: Props) => {
 
   const isSub = !('subItems' in item)
 
-  const allSubItemsCompleted = isSub
-    ? true
-    : item.subItems.every((sl) => sl.completed == true)
-
   const style = {
     marginLeft: isSub ? '2rem' : '0',
   }
@@ -26,8 +22,6 @@ const Item = ({ item, fatherId = '' }: Props) => {
   const createSubItem = () => addSubItem(item.id)
 
   const editStatus = (): void => {
-    if (!allSubItemsCompleted) return
-
     const newStatus = !item.completed
     isSub
       ? editSubItem(fatherId, item.id, newStatus)

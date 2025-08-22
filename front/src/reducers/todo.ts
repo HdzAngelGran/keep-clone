@@ -53,7 +53,6 @@ const UPDATE_STATE_BY_ACTION = {
       item.id === itemId
         ? {
             ...item,
-            completed: false,
             subItems: [...(item.subItems || []), newSubItem],
           }
         : item,
@@ -74,7 +73,6 @@ const UPDATE_STATE_BY_ACTION = {
         )
         return {
           ...item,
-          completed: isStatus && !value ? false : item.completed,
           subItems: updatedSubItems,
         }
       }
