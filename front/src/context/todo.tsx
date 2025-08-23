@@ -22,8 +22,8 @@ function useTodoReducer() {
     dispatch({ type: 'INIT_LIST', payload: { list } })
   }
 
-  const addItem = () => {
-    dispatch({ type: 'ADD_ITEM' })
+  const addItem = (linkedItem: string = '') => {
+    dispatch({ type: 'ADD_ITEM', payload: { linkedItem } })
   }
 
   const editItem = (itemId: string, value: string | boolean) => {

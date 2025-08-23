@@ -1,23 +1,31 @@
-import { useContext } from 'react'
-import { FilterContext } from '../context/filters.js'
-import { FilterContextType, Item } from '../types.js'
-
-interface Filter extends FilterContextType {
-  filterList: (list: Item[]) => Item[]
-}
+import type { Item, Filter } from '../types.js'
 
 export function useFilter(): Filter {
-  const { filter, setFilter } = useContext(FilterContext)
+  const filterList = (list: Item[]) => {
+    const listGroup: Item[] = []
+    const subItemsMap = new Map<string, Item[]>()
 
-  const filterList = (list: Item[]): Item[] => {
-    if (filter === 'all') return list
-    const rule = filter === 'completed' ? true : false
-    return list.filter((item: Item) => item.completed === rule)
+    for (const item of list) {
+      if (!item.linkedItem) continue
+
+      if (!subItemsMap.has(item.linkedItem))
+        subItemsMap.set(item.linkedItem, [])
+
+      subItemsMap.get(item.linkedItem)!.push(item)
+    }
+
+    for (const item of list) {
+      if (item.linkedItem) continue
+
+      listGroup.push(item)
+      const subItems = subItemsMap.get(item.id)
+      if (subItems) listGroup.push(...subItems)
+    }
+
+    return listGroup
   }
 
   return {
-    filter,
-    setFilter,
     filterList,
   }
 }

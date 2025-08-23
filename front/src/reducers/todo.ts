@@ -15,12 +15,13 @@ const UPDATE_STATE_BY_ACTION = {
     updateLocalStorage(list)
     return list
   },
-  [ACTION.ADD_ITEM]: (state: Item[]) => {
+  [ACTION.ADD_ITEM]: (state: Item[], action: any) => {
+    const { linkedItem } = action.payload
     const newItem = {
       id: crypto.randomUUID(),
       completed: false,
       text: '',
-      subItems: [],
+      linkedItem,
     }
     const newState = [...state, newItem]
     updateLocalStorage(newState)
@@ -39,59 +40,6 @@ const UPDATE_STATE_BY_ACTION = {
   },
   [ACTION.DELETE_ITEM]: (state: Item[], action: any) => {
     const newState = state.filter((item) => item.id !== action.payload)
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.ADD_SUB_ITEM]: (state: Item[], action: any) => {
-    const { itemId } = action.payload
-    const newSubItem = {
-      id: crypto.randomUUID(),
-      completed: false,
-      text: '',
-    }
-    const newState: Item[] = state.map((item) =>
-      item.id === itemId
-        ? {
-            ...item,
-            subItems: [...(item.subItems || []), newSubItem],
-          }
-        : item,
-    )
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.EDIT_SUB_ITEM]: (state: Item[], action: any) => {
-    const { itemId, subItemId, value } = action.payload
-    const isStatus = typeof value === 'boolean'
-
-    const newState = state.map((item) => {
-      if (item.id === itemId) {
-        const updatedSubItems = item.subItems?.map((subItem) =>
-          subItem.id === subItemId
-            ? { ...subItem, [isStatus ? 'completed' : 'text']: value }
-            : subItem,
-        )
-        return {
-          ...item,
-          subItems: updatedSubItems,
-        }
-      }
-      return item
-    })
-    updateLocalStorage(newState)
-    return newState
-  },
-  [ACTION.DELETE_SUB_ITEM]: (state: Item[], action: any) => {
-    const { itemId, subItemId } = action.payload
-    const newState = state.map((item) => {
-      if (item.id === itemId) {
-        const updatedSubItems = item.subItems?.filter(
-          (subItem) => subItem.id !== subItemId,
-        )
-        return { ...item, subItems: updatedSubItems }
-      }
-      return item
-    })
     updateLocalStorage(newState)
     return newState
   },

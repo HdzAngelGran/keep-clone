@@ -2,71 +2,53 @@ import { useTodo } from '../hooks/useTodo'
 import Close from '../assets/Close'
 import Arrow from '../assets/Arrow'
 import './Item.css'
-import { SubItem, type Item } from '../types'
+import type { Item } from '../types'
 
 interface Props {
-  item: Item | SubItem
-  fatherId?: string
+  item: Item
 }
 
-const Item = ({ item, fatherId = '' }: Props) => {
-  const { editItem, deleteItem, addSubItem, editSubItem, deleteSubItem } =
-    useTodo()
+const Item = ({ item }: Props) => {
+  const { editItem, deleteItem, addItem } = useTodo()
 
-  const isSub = !('subItems' in item)
+  const isSub = item.linkedItem && item.linkedItem?.trim() !== ''
 
   const style = {
     marginLeft: isSub ? '2rem' : '0',
   }
 
-  const createSubItem = () => addSubItem(item.id)
+  const createSubItem = () => addItem(item.id)
 
-  const editStatus = (): void => {
-    const newStatus = !item.completed
-    isSub
-      ? editSubItem(fatherId, item.id, newStatus)
-      : editItem(item.id, newStatus)
-  }
+  const editStatus = () => editItem(item.id, !item.completed)
 
-  const editText = (e: any): void => {
-    const newText = e.target.value
-    isSub ? editSubItem(fatherId, item.id, newText) : editItem(item.id, newText)
-  }
+  const editText = (e: any) => editItem(item.id, e.target.value)
 
-  const deleteFromList = (): void => {
-    isSub ? deleteSubItem(fatherId, item.id) : deleteItem(item.id)
-  }
+  const deleteFromList = () => deleteItem(item.id)
 
   return (
-    <>
-      <div className="item" data-completed={item.completed}>
-        <div className="status" onClick={editStatus} style={style}></div>
-        <input
-          className="text"
-          type="text"
-          value={item.text}
-          onChange={editText}
-        />
-        <div className="action">
-          {!isSub && (
-            <div
-              title="Agregar SubTarea"
-              className="add-sub"
-              onClick={createSubItem}
-            >
-              <Arrow width={'1.3rem'} height={'1.3rem'} />
-            </div>
-          )}
-          <div title="Eliminar" className="close" onClick={deleteFromList}>
-            <Close width={'1.3rem'} height={'1.3rem'} />
+    <div className="item" data-completed={item.completed}>
+      <div className="status" onClick={editStatus} style={style}></div>
+      <input
+        className="text"
+        type="text"
+        value={item.text}
+        onChange={editText}
+      />
+      <div className="action">
+        {!isSub && (
+          <div
+            title="Agregar SubTarea"
+            className="add-sub"
+            onClick={createSubItem}
+          >
+            <Arrow width={'1.3rem'} height={'1.3rem'} />
           </div>
+        )}
+        <div title="Eliminar" className="close" onClick={deleteFromList}>
+          <Close width={'1.3rem'} height={'1.3rem'} />
         </div>
       </div>
-      {!isSub &&
-        item.subItems.map((sub: SubItem) => (
-          <Item key={sub.id} item={sub} fatherId={item.id} />
-        ))}
-    </>
+    </div>
   )
 }
 

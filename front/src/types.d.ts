@@ -4,13 +4,7 @@ export interface Item {
   id: string
   text: string
   completed: boolean
-  subItems: SubItem[]
-}
-
-export interface SubItem {
-  id: string
-  text: string
-  completed: boolean
+  linkedItem: string
 }
 
 export interface IconProps {
@@ -18,17 +12,19 @@ export interface IconProps {
   height: string
 }
 
-export type FilterValue = (typeof TODO_FILTER)[keyof typeof TODO_FILTER]
-
 export interface FilterContextType {
   filter: string
-  setFilter: React.Dispatch<React.SetStateAction<FilterValue>>
+  setFilter: React.Dispatch<React.SetStateAction<string>>
+}
+
+export interface Filter {
+  filterList: (list: Item[]) => Item[]
 }
 
 export interface TodoContextType {
   list: Item[]
   initList: (list: Item[]) => void
-  addItem: () => void
+  addItem: (linkedItem?: string) => void
   editItem: (itemId: string, value: string | boolean) => void
   deleteItem: (itemId: string) => void
   addSubItem: (itemId: string) => void

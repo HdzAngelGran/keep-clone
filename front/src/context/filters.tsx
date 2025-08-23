@@ -1,6 +1,5 @@
-import React, { createContext, ReactElement, useState } from 'react'
-import { FilterContextType, FilterValue } from '../types'
-import { TODO_FILTER } from '../const'
+import { createContext, ReactElement, useState } from 'react'
+import type { FilterContextType } from '../types'
 
 export const FilterContext = createContext<FilterContextType>({
   filter: 'all',
@@ -8,7 +7,7 @@ export const FilterContext = createContext<FilterContextType>({
 })
 
 export const FilterProvider = ({ children }: any): ReactElement => {
-  const [filter, setFilter] = useState<FilterValue>(TODO_FILTER.ALL)
+  const [filter, setFilter] = useState<string>('')
 
   return (
     <FilterContext.Provider value={{ filter, setFilter }}>
