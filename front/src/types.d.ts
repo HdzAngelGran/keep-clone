@@ -10,11 +10,14 @@ export interface Item {
 export interface IconProps {
   width: string
   height: string
+  style?: Record<string, string>
 }
 
 export interface FilterContextType {
-  filter: string
-  setFilter: React.Dispatch<React.SetStateAction<string>>
+  uncheckedItems: Item[]
+  setUncheckedItems: React.Dispatch<React.SetStateAction<Item[]>>
+  checkedItems: Item[]
+  setCheckedItems: React.Dispatch<React.SetStateAction<Item[]>>
 }
 
 export interface Filter {

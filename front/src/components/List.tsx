@@ -1,5 +1,6 @@
 import { useTodo } from '../hooks/useTodo'
 import { useFilter } from '../hooks/useFilter'
+import Plus from '../assets/Plus'
 
 import Item from './Item'
 import './List.css'
@@ -10,19 +11,36 @@ function List() {
   const { filterList } = useFilter()
   const { list, addItem } = useTodo()
 
-  const filteredList = filterList(list)
+  const sortedList = filterList(list)
+  const checkedItems = sortedList.filter((item) => item.completed)
+  const uncheckedItems = sortedList.filter((item) => !item.completed)
 
   return (
-    <>
-      <main className="list">
-        {filteredList.map((item) => (
+    <main>
+      <div className="list">
+        {uncheckedItems.map((item) => (
           <Item key={item.id} item={item} />
         ))}
         <button type="button" onClick={() => addItem()}>
-          + Nueva tarea
+          <Plus
+            width={'1.3rem'}
+            height={'1.3rem'}
+            style={{ marginRight: '0.2rem' }}
+          />
+          List item
         </button>
-      </main>
-    </>
+        {checkedItems.length > 0 && (
+          <details>
+            <summary>{checkedItems.length} Checked items</summary>
+            <div className="list">
+              {checkedItems.map((item) => (
+                <Item key={item.id} item={item} />
+              ))}
+            </div>
+          </details>
+        )}
+      </div>
+    </main>
   )
 }
 

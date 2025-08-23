@@ -1,7 +1,12 @@
-import type { Item, Filter } from '../types.js'
+import { useContext } from 'react'
+import type { Filter, Item } from '../types.js'
+import { FilterContext } from '../context/filters.js'
 
 export function useFilter(): Filter {
-  const filterList = (list: Item[]) => {
+  const { checkedItems, setCheckedItems, uncheckedItems, setUncheckedItems } =
+    useContext(FilterContext)
+
+  const filterList = (list: Item[]): Item[] => {
     const listGroup: Item[] = []
     const subItemsMap = new Map<string, Item[]>()
 
