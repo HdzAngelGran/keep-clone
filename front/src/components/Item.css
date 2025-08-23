@@ -1,11 +1,7 @@
 .item {
-  margin-inline: 1rem;
-  padding-block: 0.5rem;
-  width: 100%;
-  display: grid;
-  align-items: end;
-  grid-template-columns: auto 1fr 0.3fr;
-  border-radius: 0.7rem;
+  display: flex;
+  padding-inline: 0.5rem;
+  align-items: center;
   transition: 0.4s;
   &:hover {
     & .action > * {
@@ -13,10 +9,10 @@
     }
   }
   &[data-completed='true'] {
-    & .status {
+    .status {
       background-color: darkgrey;
     }
-    & .text {
+    .text {
       text-decoration: line-through;
     }
   }
@@ -34,28 +30,28 @@
   border-radius: 0.2rem;
   cursor: pointer;
   transition: 0.4s;
+  flex-shrink: 0;
 }
 
 .text {
-  height: 0.8rem;
+  flex-shrink: 1;
+  flex-grow: 1;
   margin: 0;
-  padding: 0.2rem;
+  padding: 0;
   font-size: 1rem;
   background-color: transparent;
   border: none;
-  border-bottom: 0.1rem solid transparent;
-  border-radius: 0;
   outline: none;
+  line-height: 1lh;
   transition: 0.4s;
-  &:focus {
-    border-bottom: 0.1rem solid white;
-    & + .action > * {
-      display: flex;
-    }
+  &:focus + .action > * {
+    display: flex;
   }
 }
 
 .action {
+  flex-shrink: 0;
+  flex-basis: 2.6rem;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
